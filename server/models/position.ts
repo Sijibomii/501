@@ -1,11 +1,14 @@
 import { model, Schema } from "mongoose";
+import { IBusPosition } from "../interface";
 
 const BusPositionSchema = new Schema<IBusPosition>(
   {
     coordinates: {
+      type: {},
       required: true,
     },
     metadata: {
+      type: Object,
       required: true,
     },
   },

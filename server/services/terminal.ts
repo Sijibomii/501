@@ -1,5 +1,7 @@
+import { Coordinates } from "../interface";
 import { BusTerminalModel } from "../models/terminal";
 import Geoservice from "./geoservice";
+import { isValidCoordinate } from "./helpers";
 
 class Terminal {
   model = BusTerminalModel;
@@ -26,6 +28,19 @@ class Terminal {
   deleteById(terminalId: string) {
     //TO-DO delete all trips with this termianl in its routes
     return this.model.findByIdAndDelete(terminalId);
+  }
+
+  getByCoordinates(coodinates: Coordinates) {
+    return this.model.findOne({
+      coordinates: {
+        latitude: coodinates.latitude,
+        longitude: coodinates.longitude,
+      },
+    });
+  }
+
+  getAll() {
+    return this.model.find({});
   }
 }
 

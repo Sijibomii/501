@@ -15,6 +15,17 @@ positionRouter.post(
         backoff: 3000,
         removeOnComplete: true,
       });
-    } catch (error) {}
+      return res.status(200).json({
+        success: true,
+        data: true,
+        message: "Successfully updated position",
+      });
+    } catch (error) {
+      return res.status(400).json({ success: true, message: error });
+    }
   }
 );
+
+//fetch position of a bus since a particular date
+
+export default positionRouter;

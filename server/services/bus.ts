@@ -1,5 +1,9 @@
+import { MINIMUM_DISTANCE_TO_CHANGE_TERMINALS } from "../config";
+import { Coordinates } from "../interface";
 import { BusModel } from "../models/bus";
 import geoservice from "./geoservice";
+import { isValidCoordinate } from "./helpers";
+import terminal from "./terminal";
 import Trip from "./trip";
 
 class Bus {
@@ -21,8 +25,30 @@ class Bus {
     });
   }
 
-  getById(busId: string) {
-    return this.model.findById(busId).lean();
+  async getById(busId: string) {
+    const bus = await this.model.findById(busId).lean();
+    if (!bus) throw new Error("Bus of id not found");
+    if (!bus?.currentTrip)
+      return {
+        ...bus,
+        isInGeofence: geoservice.pointInpolygon(
+          bus.currentPosition,
+          bus.geoFencingBoundaries
+        ),
+      };
+    const trip = await Trip.getById(bus.currentTrip);
+    const isInGeofence = geoservice.pointInpolygon(
+      bus.currentPosition,
+      trip!.geofenceBoundaries
+    );
+    const currentPosition = await geoservice.getInfoOfCoordinate(
+      bus.currentPosition
+    );
+    return {
+      ...bus,
+      currentPositionInfo: currentPosition.display_name,
+      isInGeofence,
+    };
   }
 
   getByPlateNumber(plateNumber: string) {
@@ -38,10 +64,17 @@ class Bus {
     if (bus.currentTrip) {
       throw new Error("Previous bus trip has not ended");
     }
+    const lastTerminalId = (
+      await terminal.getByCoordinates(trip.terminalsTravelled[0])
+    )?.id;
+    const nextTerminalId = (
+      await terminal.getByCoordinates(trip.terminalsTravelled[1])
+    )?.id;
     return this.model.findByIdAndUpdate(busId, {
       currentTrip: tripId,
-      lastTerminal: trip.terminalsTravelled[0],
-      nextTerminal: trip.terminalsTravelled[1],
+      currentTripStartedAt: Date.now(),
+      lastTerminal: lastTerminalId,
+      nextTerminal: nextTerminalId,
     });
   }
 
@@ -50,14 +83,24 @@ class Bus {
     if (!bus) throw new Error("Invalid busId provided");
     if (!bus.currentTrip) throw new Error("Bus is not on a current trip");
     return this.model.findByIdAndUpdate(busId, {
-      $unset: { currentTrip: 1, lastTerminal: 1, nextTerminal: 1 },
+      $unset: {
+        currentTrip: 1,
+        lastTerminal: 1,
+        currentTripStartedAt: 1,
+        nextTerminal: 1,
+      },
+      $set: {
+        currentTripEndedAt: Date.now(),
+      },
     });
   }
 
   getAllBusesOnTrip() {
-    return this.model.find({
-      currentTrip: { $exists: true },
-    });
+    return this.model
+      .find({
+        currentTrip: { $exists: true },
+      })
+      .lean();
   }
 
   async setCurrentPosition(busId: string, coordinates: Coordinates) {
@@ -76,39 +119,78 @@ class Bus {
     }
 
     const { terminalsTravelled } = currentTrip;
-    let lastTerminal: Coordinates | null = null;
+    let lastTerminal: Coordinates | null | undefined = null;
     let nextTerminal: Coordinates | null = null;
 
-    for (let i = 0; i < terminalsTravelled.length - 1; i++) {
-      const currentTerminal = terminalsTravelled[i];
-      const next = terminalsTravelled[i + 1];
+    const currentTerminal = await terminal.getById(bus.lastTerminal!);
+    lastTerminal = currentTerminal?.coordinates;
+    const indexOf = terminalsTravelled.findIndex((terminal) => {
+      return (
+        terminal.latitude == currentTerminal?.coordinates.latitude &&
+        terminal.longitude == currentTerminal.coordinates.longitude
+      );
+    });
 
-      const distanceToCurrent = geoservice.getDistanceBetweenPoints([
-        bus.currentPosition,
-        currentTerminal,
-      ]);
-      const distanceToNext = geoservice.getDistanceBetweenPoints([
-        bus.currentPosition,
-        next,
-      ]);
-
-      if (distanceToNext < distanceToCurrent) {
-        lastTerminal = currentTerminal;
-        nextTerminal = next;
-        break;
-      }
+    if (indexOf == terminalsTravelled.length - 1) {
+      return;
     }
+    if (!currentTerminal) throw new Error("current terminal ");
+
+    const next = terminalsTravelled[indexOf + 1];
+
+    const [distanceToCurrent, distanceToNext, distanceBetweenTerminals] =
+      await Promise.all([
+        geoservice.getDistanceBetweenPoints([
+          bus.currentPosition,
+          currentTerminal.coordinates,
+        ]),
+        geoservice.getDistanceBetweenPoints([bus.currentPosition, next]),
+        geoservice.getDistanceBetweenPoints([
+          currentTerminal.coordinates,
+          next,
+        ]),
+      ]);
+    console.log(
+      indexOf,
+      distanceToCurrent,
+      distanceToNext,
+      currentTerminal,
+      bus.currentPosition
+    );
+
+    if (
+      (distanceToNext < distanceToCurrent &&
+        distanceToNext < MINIMUM_DISTANCE_TO_CHANGE_TERMINALS) ||
+      distanceToCurrent > distanceBetweenTerminals
+    ) {
+      console.log("Changing terminal");
+      lastTerminal = next;
+      nextTerminal = terminalsTravelled[indexOf + 2];
+      // break;
+    }
+
+    for (let i = 0; i < terminalsTravelled.length - 1; i++) {}
 
     // If the bus has not yet passed the first terminal, or has passed all terminals
-    if (!lastTerminal) {
-      lastTerminal = terminalsTravelled[terminalsTravelled.length - 2];
-      nextTerminal = terminalsTravelled[terminalsTravelled.length - 1];
+    // if (!lastTerminal) {
+    //   lastTerminal = terminalsTravelled[terminalsTravelled.length - 2];
+    //   nextTerminal = terminalsTravelled[terminalsTravelled.length - 1];
+    // }
+
+    const lastTerminalId = await terminal.getByCoordinates(lastTerminal!);
+    var nextTerminalId;
+    if (nextTerminal) {
+      nextTerminalId = await terminal.getByCoordinates(nextTerminal);
     }
 
-    this.model.findByIdAndUpdate(busId, {
-      lastTerminal: lastTerminal,
-      nextTerminal: nextTerminal,
+    await this.model.findByIdAndUpdate(busId, {
+      lastTerminal: lastTerminalId?.id,
+      nextTerminal: nextTerminalId?.id,
     });
+  }
+
+  getAll() {
+    return this.model.find({});
   }
 }
 

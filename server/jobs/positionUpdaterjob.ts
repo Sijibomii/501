@@ -15,10 +15,12 @@ export const PositionUpdaterQueue = new Queue<any>(
 PositionUpdaterQueue.process(async function (job, done) {
   try {
     const { latitude, longitude, plateNumber } = job.data;
+    console.log(job.data);
     //use Queue to process data
     const bus = await Bus.getByPlateNumber(plateNumber);
     await Position.create(bus!._id.toString(), { latitude, longitude });
     //update current Poisition of bus.
+
     await Bus.setCurrentPosition(bus!._id.toString(), {
       latitude,
       longitude,
@@ -26,10 +28,17 @@ PositionUpdaterQueue.process(async function (job, done) {
 
     if (bus?.currentTrip) {
       const trip = await Trip.getById(bus.currentTrip);
-      Geoservice.pointInpolygon(
-        { latitude, longitude },
-        trip!.geofenceBoundaries
-      );
+      await Bus.updateLastAndNextTerminals(String(bus._id));
+      if (trip?.geofenceBoundaries) {
+        const isInGeofence = Geoservice.pointInpolygon(
+          { latitude, longitude },
+          trip!.geofenceBoundaries
+        );
+        if (!isInGeofence) {
+          //alert control centre
+          console.log("Bus is not in geofence");
+        }
+      }
     }
     done();
   } catch (error: any) {

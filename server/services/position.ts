@@ -1,3 +1,4 @@
+import { Coordinates } from "../interface";
 import { BusPositionModel } from "../models/position";
 import Bus from "./bus";
 

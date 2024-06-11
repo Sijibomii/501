@@ -1,20 +1,33 @@
 import { Document, model, Schema } from "mongoose";
+import { IBus } from "../interface";
 
 export interface IBusDocument extends Document, IBus {}
 
 const BusSchema = new Schema<IBus>(
   {
-    plateNumber: { required: true, unique: true },
+    plateNumber: { type: String, required: true, unique: true },
     currentPosition: {},
-    geoFencingBoundaries: { required: true },
+    geoFencingBoundaries: {
+      type: [{}],
+      required: true,
+    },
     currentTrip: {
       type: "ObjectId",
       ref: "TripModel",
     },
+    currentTripStartedAt: {
+      type: Date,
+    },
+    currentTripEndedAt: {
+      type: Date,
+    },
+    lastTerminal: { type: String },
+    nextTerminal: {
+      type: String,
+    },
   },
   {
     timestamps: true,
-    expireAfterSeconds: 60 * 60 * 24 * 7, //7 days
   }
 );
 

@@ -1,7 +1,8 @@
 import axios, { Axios, AxiosInstance } from "axios";
+import { CoordinateInfo, Coordinates, Routes, Waypoint } from "../interface";
 var gju = require("geojson-utils");
 
-const openStreetURL = "http://router.project-osrm.org/";
+const openStreetURL = " https://routing.openstreetmap.de/routed-car/";
 const nominatimURL = "https://nominatim.openstreetmap.org/";
 
 class Geoservice {
@@ -16,16 +17,16 @@ class Geoservice {
     points: Coordinates[],
     profile: "driving" | "car" | "foot" | "bike"
   ) {
-    var url = `routes/${profile}/`;
+    var url = `route/v1/${profile}/`;
     points.forEach((coordinate) => {
-      url = url + `${coordinate.latitude},${coordinate.longitude}:`;
+      url = url + `${coordinate.latitude},${coordinate.longitude};`;
     });
     url = url.slice(0, -1);
     const data = await this.georouter.get<{
-      routes: Routes;
+      routes: Routes[];
       waypoints: Waypoint[];
     }>(url, {
-      params: { overview: false },
+      params: { overview: false, alternatives: false, steps: false },
     });
     return data.data;
   }
@@ -41,10 +42,17 @@ class Geoservice {
     return res.data;
   }
 
-  getDistanceBetweenPoints(points: Coordinates[]): number {
+  async getDistanceBetweenPoints(
+    points: Coordinates[],
+    mode: "driving" = "driving"
+  ): Promise<number> {
+    if (mode == "driving") {
+      const routeData = await this.getRouteBetweenPoints(points, "driving");
+      return routeData.routes[0].distance;
+    }
     return gju.pointDistance(
-      { type: "Point", coordinates: points[0] },
-      { type: "Point", coordinates: points[1] }
+      { type: "Point", coordinates: [points[0].latitude, points[0].longitude] },
+      { type: "Point", coordinates: [points[1].latitude, points[1].longitude] }
     );
   }
 

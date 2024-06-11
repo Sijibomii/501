@@ -1,56 +1,56 @@
-interface IBusPosition {
+export interface IBusPosition {
   coordinates: Coordinates;
   metadata: { busId: string; tripId: string };
   createdAt: string | Date;
 }
 
-interface IBusTerminal {
+export interface IBusTerminal {
   coordinates: Coordinates;
   displayName: string;
 }
 
-interface ITrip {
+export interface ITrip {
   terminalsTravelled: Coordinates[]; //array of terminals where the bus has to travel to. Length must be more than 2. First element is starting point, last element is final destination
   summary: string;
   geofenceBoundaries: Coordinates[];
 }
 
-interface IBus {
+export interface IBus {
   plateNumber: string;
   currentPosition: Coordinates;
   geoFencingBoundaries: Coordinates[];
   currentTrip?: string;
+  currentTripStartedAt?: Date;
+  currentTripEndedAt?: Date;
   lastTerminal?: string;
   nextTerminal?: string;
 }
 
-interface RouteLeg {
+export interface RouteLeg {
   steps: any[];
   summary: string;
   weight: number;
   duration: number;
   distance: number;
 }
-type Coordinates = { latitude: number; longitude: number };
+export type Coordinates = { latitude: number; longitude: number };
 
-interface Routes {
-  routes: {
-    legs: RouteLeg[];
-    weight_name: "routability";
-    weight: number;
-    duration: number;
-    distance: number;
-  }[];
+export interface Routes {
+  legs: RouteLeg[];
+  weight_name: "routability";
+  weight: number;
+  duration: number;
+  distance: number;
 }
 
-interface Waypoint {
+export interface Waypoint {
   hint: string;
   distance: number;
   name: string;
   location: number[];
 }
 
-interface CoordinateInfo {
+export interface CoordinateInfo {
   place_id: number;
   licence: string;
   osm_type: "way";

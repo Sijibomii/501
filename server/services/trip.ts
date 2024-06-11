@@ -1,4 +1,6 @@
+import { Coordinates } from "../interface";
 import { TripModel } from "../models/trip";
+import { isValidCoordinate } from "./helpers";
 
 class Trip {
   model = TripModel;
@@ -26,6 +28,16 @@ class Trip {
 
   deleteById(tripId: string) {
     return this.model.findByIdAndDelete(tripId);
+  }
+
+  getAll() {
+    return this.model.find({});
+  }
+
+  getTripsByCoordinates(coordinates: Coordinates) {
+    return this.model.find({
+      terminalsTravelled: coordinates,
+    });
   }
 }
 
