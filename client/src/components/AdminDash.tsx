@@ -14,7 +14,7 @@ function AdminDash() {
             <div className='admin-dash-header w-full'>
                 <SearchBar />
             </div>
-            <div className='map-container mt-24'>
+            <div className='map-container mt-12 w-full'>
                 {isMounted && <Map />}
             </div>
         </div>
