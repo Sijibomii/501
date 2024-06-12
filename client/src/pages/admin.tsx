@@ -4,7 +4,7 @@ import { HeaderController } from '@/components/HeaderController'
 import { Layout } from '@/components/AdminLayout'
 import { useCurrentPage } from "../global-stores/useCurrentPage"
 import AdminDash from '@/components/AdminDash'
-
+import AdminInventory from '@/components/AdminInventory'
 
 function AdminDashboard() {
 
@@ -14,9 +14,12 @@ function AdminDashboard() {
     <Auth>
       <HeaderController/>
         <Layout>
-          { currentPage == 'dash' ? (
+          { currentPage == 'dash' && (
             <AdminDash />
-          ):(<></>)}
+          )}
+          { currentPage == 'inventory' && (
+            <AdminInventory />
+          )}
         </Layout>
     </Auth>
   )
