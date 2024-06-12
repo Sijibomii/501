@@ -3,7 +3,7 @@ import CircleIcon from '@/icons/Circle'
 import { Button } from '@/ui/Button'
 import { Form, Formik } from "formik";
 import { InputField } from '@/ui/InputField';
-import Image from 'next/image';
+
 
 function LoginPage() {
 
@@ -30,11 +30,11 @@ function LoginPage() {
                                     </div>
                                 </div>
                             </div>
-                            <div className='lft-login-modal-2 flex items-center mt-10'>
-                                <Button size='xxl' color='secondary'>
+                            <div className='lft-login-modal-2 flex items-center mt-10 border-secondary border-[1px] rounded-lg'>
+                                <Button size='xxl' color='secondary' className=''>
                                     <h4 className='text-white font-light'>Admin</h4>
                                 </Button>
-                                <Button className='border-secondary border-[1px]' size='xxl' color='transparent'>
+                                <Button className='' size='xxl' color='transparent'>
                                     <h4 className='text-secondary font-light'>User</h4>
                                 </Button>
                             </div>
