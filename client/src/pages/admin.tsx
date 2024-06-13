@@ -20,6 +20,9 @@ function AdminDashboard() {
           { currentPage == 'inventory' && (
             <AdminInventory />
           )}
+          { currentPage == 'route' && (
+            <AdminInventory />
+          )}
         </Layout>
     </Auth>
   )

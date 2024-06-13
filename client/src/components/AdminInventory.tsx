@@ -90,6 +90,7 @@ function AdminInventory() {
                             </div>
                         </div>
                     </div>
+                    {/* end of comment should be here: if no trips */}
                 </div>
                 <div className='admin-inventory-footer flex items-center w-full'>
                     <div className='flex items-center bg-white py-4 px-7 w-full rounded-lg mr-5'>
