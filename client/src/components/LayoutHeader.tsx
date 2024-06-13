@@ -9,7 +9,7 @@ export const LayoutHeader: React.FC<LayoutHeaderProps> = ({}) => {
     return (
         <div className='layout-header w-screen'>
             <div className='layout-header-container w-full'>
-                <div className='layout-header-top bg-secondary py-5'>
+                <div className='layout-header-top bg-header py-5'>
                 </div>
                 <div className='layout-header-bottom flex items-center justify-between max-w-7xl w-full mx-auto py-4'>
                     <div className='layout-header-left flex items-center'>

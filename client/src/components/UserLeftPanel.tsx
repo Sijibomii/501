@@ -1,5 +1,4 @@
 import DashIcon from '@/icons/Dashboard'
-import BusIcon from '@/icons/Bus'
 import NavIcon from '@/icons/NavIcon'
 import SettingsIcon from '@/icons/Settings'
 import LogoutIcon from '@/icons/LogOut'
@@ -11,8 +10,8 @@ interface UserLeftPanelProps{}
 export const UserLeftPanel: React.FC<UserLeftPanelProps> = ({}) => {
     const { currentPage, set } = useUserCurrentPage();
     return (
-        <div className='admin-left-panel'>
-            <div className='admin-left-panel-container bg-white rounded-lg shadow-md'>
+        <div className='user-left-panel mt-[-100px]'>
+            <div className='user-left-panel-container bg-white rounded-lg shadow-md'>
                 <div className={`panel-1 flex items-center flex-col p-10 cursor-pointer 
                 ${currentPage == 'home' ? "bg-secondary text-white" : "text-secondary"}  rounded-lg`}
                     onClick={()=>{
