@@ -2,9 +2,12 @@ import InvIcon from '@/icons/InvIcon'
 import PenIcon from '@/icons/PenIcon'
 import PlusIcon from '@/icons/PlusIcon'
 import React from 'react'
-
+import { useTripModal } from '@/global-stores/useTripModal'
+import AdminNewTripModal from './AdminNewTripModal'
 function AdminRoute() {
+    const { isOpen, set } = useTripModal();
   return (
+    
     <div className='admin-inventory w-full px-2 h-full'>
         <div className='admin-inventory-container flex flex-col items-start justify-between  w-full h-full'>
             <div className='w-full'>
@@ -92,8 +95,14 @@ function AdminRoute() {
                     </div>
                     {/* end of comment should be here: if no trips */}
                 </div>
+                { isOpen && (<AdminNewTripModal/>)}
                 <div className='admin-inventory-footer flex items-center w-full'>
-                    <div className='flex items-center bg-white py-4 px-7 w-full rounded-lg mr-5'>
+                    <div className='flex items-center bg-white py-4 px-7 w-full rounded-lg mr-5 cursor-pointer'
+                        onClick={()=> {
+                            set({
+                                isOpen: true
+                            })
+                        }}>
                         <div className='mr-4'>
                             <PlusIcon width={30} height={30} />
                         </div>

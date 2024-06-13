@@ -57,7 +57,6 @@ function AdminInventory() {
                 { isOpen && (<AdminNewInventoryModal />)}
                 <div className='admin-inventory-footer flex items-center w-full'>
                     <div className='flex items-center bg-white py-4 px-7 w-full rounded-lg mr-5 cursor-pointer' onClick={()=> {
-                        console.log(isOpen)
                         set({
                             isOpen: true
                         })
