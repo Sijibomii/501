@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
-type AllowedPages = 'dash' | 'inventory' | 'route' | 'settings';
+type AllowedPages = string; //'dash' | 'inventory' | 'route' | 'settings';
 
 interface CurrentPageState {
-    page: AllowedPages;
+    currentPage: AllowedPages;
+    set: any;
 }
 
 export const useCurrentPage = create<CurrentPageState>(

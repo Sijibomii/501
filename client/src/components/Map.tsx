@@ -1,6 +1,6 @@
 import React, { useState} from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L, { MarkerCluster } from "leaflet";
+import L from "leaflet";
 import LocationIcon from "../img/location.png"
 import MarkerClusterGroup from 'next-leaflet-cluster'
 // import MarkerClusterGroup from "react-leaflet-cluster";
@@ -19,13 +19,13 @@ function Map() {
 
 
     const customIcon = new L.Icon({
-        iconUrl: LocationIcon,
+        // iconUrl: LocationIcon,
         iconSize: new L.Point(40, 47),
       })
       
       // NOTE: iconCreateFunction is running by leaflet, which is not support ES6 arrow func syntax
       // eslint-disable-next-line
-      const createClusterCustomIcon = function (cluster: MarkerCluster) {
+      const createClusterCustomIcon = function (cluster: any) {
         return L.divIcon({
           html: `<span>${cluster.getChildCount()}</span>`,
           className: 'custom-marker-cluster',

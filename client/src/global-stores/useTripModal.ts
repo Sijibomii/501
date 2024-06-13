@@ -3,6 +3,7 @@ import { combine } from "zustand/middleware";
 
 interface TripModalProps {
     isOpen: boolean;
+    set: any;
 }
 
 export const useTripModal = create<TripModalProps>(

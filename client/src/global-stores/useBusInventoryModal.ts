@@ -3,6 +3,7 @@ import { combine } from "zustand/middleware";
 
 interface InventoryModalProps {
     isOpen: boolean;
+    set: any;
 }
 
 export const useBusInventoryModal = create<InventoryModalProps>(

@@ -5,7 +5,9 @@ import React from 'react'
 import { useBusInventoryModal } from '@/global-stores/useBusInventoryModal'
 import AdminNewInventoryModal from './AdminNewInventoryModal'
 function AdminInventory() {
+
     const { isOpen, set } = useBusInventoryModal();
+    
   return (
     <div className='admin-inventory w-full px-2 h-full'>
         <div className='admin-inventory-container flex flex-col items-start justify-between  w-full h-full'>
