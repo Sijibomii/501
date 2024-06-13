@@ -18,7 +18,7 @@ export const AdminLeftPanel: React.FC<AdminLeftPanelProps> = ({}) => {
                     onClick={()=>{
                         set({ currentPage: 'dash' })
                     }}
-                >
+                    >
                     <DashIcon className={currentPage == 'dash' ? "bg-[#dbdbdb]" : "text-secondary"} width={20} height={20} />
                     <h4 className='font-light text-sm mt-3'>Dashboard</h4>
                 </div>
@@ -29,7 +29,7 @@ export const AdminLeftPanel: React.FC<AdminLeftPanelProps> = ({}) => {
                     }}
                     >
                     <BusIcon className={currentPage == 'inventory' ? "bg-[#dbdbdb]" : "text-secondary"} width={20} height={20} />
-                    <h4 className='font-light text-sm mt-3'>Trips Inventory</h4>
+                    <h4 className='font-light text-sm mt-3'>Bus Inventory</h4>
                 </div>
                 <div className={`panel-3 flex items-center flex-col p-10 cursor-pointer
                     ${currentPage == 'route' ? "bg-secondary text-white" : "text-secondary"} rounded-lg`}

@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 
 function AdminDash() {
     const Map = dynamic(() => import('./Map'), { ssr: false });
-  const [isMounted, setIsMounted] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
   }, []);
