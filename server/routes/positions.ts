@@ -4,17 +4,21 @@ import { PositionUpdaterQueue } from "../jobs/positionUpdaterjob";
 
 let positionRouter = express.Router();
 
+// I removed auth middleware
 positionRouter.post(
   "",
-  authenticateAPIKey,
   async (req: Request, res: Response) => {
     try {
       //check if bus is still within geofence
+      console.log("lat and long data received!")
+      console.log(req.body)
+
       await PositionUpdaterQueue.add(req.body, {
         attempts: 3,
         backoff: 3000,
         removeOnComplete: true,
       });
+
       return res.status(200).json({
         success: true,
         data: true,

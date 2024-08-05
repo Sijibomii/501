@@ -32,6 +32,7 @@ class Bus {
       return {
         ...bus,
         isInGeofence: geoservice.pointInpolygon(
+          // current position is null
           bus.currentPosition,
           bus.geoFencingBoundaries
         ),
@@ -53,7 +54,7 @@ class Bus {
 
   getByPlateNumber(plateNumber: string) {
     return this.model.findOne({ plateNumber }).lean();
-  }
+  } 
 
   async initiateNewTrip(busId: string, tripId: string) {
     const trip = await Trip.getById(tripId);
@@ -70,6 +71,7 @@ class Bus {
     const nextTerminalId = (
       await terminal.getByCoordinates(trip.terminalsTravelled[1])
     )?.id;
+
     return this.model.findByIdAndUpdate(busId, {
       currentTrip: tripId,
       currentTripStartedAt: Date.now(),

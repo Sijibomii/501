@@ -31,6 +31,36 @@ tripRouter.get("/active", async (req: Request, res: Response) => {
   }
 });
 
+tripRouter.post("/", async (req: Request, res: Response) => {
+  try {
+    
+    const terminals = [
+      { latitude: 7.5163, longitude: 4.5227 },
+      { latitude: 7.508, longitude: 4.453 },
+      { latitude: 7.4996, longitude: 4.3833 },
+      { latitude: 7.4913, longitude: 4.3136 },
+      { latitude: 7.483, longitude: 4.2439 },
+      { latitude: 7.4746, longitude: 4.1741 },
+      { latitude: 7.4663, longitude: 4.1044 },
+      { latitude: 7.458, longitude: 4.0347 },
+      { latitude: 7.4496, longitude: 3.965 },
+      { latitude: 7.4413, longitude: 3.8953 },
+    ];
+  
+    const trip = await Trip.createNewTrip(
+      terminals,
+      "Trip from Obafemi Awolowo University, Ile-Ife  to University of Ibadan, Oyo"
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: trip
+    });
+  } catch (error) {
+    console.log(error)
+  }
+});
+
 tripRouter.get("/", async (req: Request, res: Response) => {
   try {
     const trips = await Trip.getAll();

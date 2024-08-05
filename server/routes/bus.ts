@@ -13,6 +13,7 @@ busRouter.post("", authenticateAPIKey, async (req: Request, res: Response) => {
   try {
     //check if bus is still within geofence
     const { plateNumber, boundaryCoodinates } = req.body;
+ 
     const data = await bus.create(
       plateNumber,
       boundaryCoodinates || DEFAULT_GEOFENCING_BOUNDARY_COORDINATES

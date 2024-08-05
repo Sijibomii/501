@@ -20,7 +20,7 @@ PositionUpdaterQueue.process(async function (job, done) {
     const bus = await Bus.getByPlateNumber(plateNumber);
     await Position.create(bus!._id.toString(), { latitude, longitude });
     //update current Poisition of bus.
-
+ 
     await Bus.setCurrentPosition(bus!._id.toString(), {
       latitude,
       longitude,
