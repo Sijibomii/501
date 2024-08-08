@@ -28,33 +28,33 @@ class Bus {
   async getById(busId: string) {
     const bus = await this.model.findById(busId).lean();
     if (!bus) throw new Error("Bus of id not found");
-    if (!bus?.currentTrip)
-      return {
-        ...bus,
-        isInGeofence: geoservice.pointInpolygon(
-          // current position is null
+
+    let trip;
+    let currentPosition;
+    let isInGeofence;
+    if (bus.currentPosition) {
+      currentPosition = await geoservice.getInfoOfCoordinate(
+        bus.currentPosition
+      );
+      if (bus.currentTrip) {
+        trip = await Trip.getById(bus.currentTrip);
+        isInGeofence = geoservice.pointInpolygon(
           bus.currentPosition,
-          bus.geoFencingBoundaries
-        ),
-      };
-    const trip = await Trip.getById(bus.currentTrip);
-    const isInGeofence = geoservice.pointInpolygon(
-      bus.currentPosition,
-      trip!.geofenceBoundaries
-    );
-    const currentPosition = await geoservice.getInfoOfCoordinate(
-      bus.currentPosition
-    );
+          trip!.geofenceBoundaries
+        );
+      }
+    }
+
     return {
       ...bus,
-      currentPositionInfo: currentPosition.display_name,
+      currentPositionInfo: currentPosition?.display_name,
       isInGeofence,
     };
   }
 
   getByPlateNumber(plateNumber: string) {
     return this.model.findOne({ plateNumber }).lean();
-  } 
+  }
 
   async initiateNewTrip(busId: string, tripId: string) {
     const trip = await Trip.getById(tripId);
