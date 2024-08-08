@@ -12,10 +12,16 @@ tripRouter.get("/active", async (req: Request, res: Response) => {
     const busesOnTrip = await bus.getAllBusesOnTrip();
     const trips = await Promise.all(
       busesOnTrip.map(async (bus) => {
-        const busCurrentLocationInfo = await geoservice.getInfoOfCoordinate(
-          bus.currentPosition
-        );
-        const trip = await Trip.getById(bus.currentTrip!);
+        let busCurrentLocationInfo;
+        let trip;
+        if (bus.currentPosition) {
+          busCurrentLocationInfo = await geoservice.getInfoOfCoordinate(
+            bus.currentPosition
+          );
+        }
+        if (bus.currentTrip) {
+          trip = await Trip.getById(bus.currentTrip!);
+        }
         return {
           ...trip,
           bus: { ...bus, busCurrentLocationInfo },
@@ -33,7 +39,7 @@ tripRouter.get("/active", async (req: Request, res: Response) => {
 
 tripRouter.post("/", async (req: Request, res: Response) => {
   try {
-    
+    // const {terminals, description} = req.body;
     const terminals = [
       { latitude: 7.5163, longitude: 4.5227 },
       { latitude: 7.508, longitude: 4.453 },
@@ -46,18 +52,19 @@ tripRouter.post("/", async (req: Request, res: Response) => {
       { latitude: 7.4496, longitude: 3.965 },
       { latitude: 7.4413, longitude: 3.8953 },
     ];
-  
+
     const trip = await Trip.createNewTrip(
       terminals,
       "Trip from Obafemi Awolowo University, Ile-Ife  to University of Ibadan, Oyo"
     );
+    // const trip=await Trip.createNewTrip(terminals,description);
 
     return res.status(200).json({
       success: true,
-      data: trip
+      data: trip,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
 
