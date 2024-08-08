@@ -15,9 +15,10 @@ export const PositionUpdaterQueue = new Queue<any>(
 PositionUpdaterQueue.process(async function (job, done) {
   try {
     const { latitude, longitude, plateNumber } = job.data;
-    console.log(job.data);
+    console.log("Reached queue", job.data);
     //use Queue to process data
     const bus = await Bus.getByPlateNumber(plateNumber);
+    if (!bus) return done();
     await Position.create(bus!._id.toString(), { latitude, longitude });
     //update current Poisition of bus.
  
