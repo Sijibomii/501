@@ -13,7 +13,7 @@ busRouter.post("", authenticateAPIKey, async (req: Request, res: Response) => {
   try {
     //check if bus is still within geofence
     const { plateNumber, boundaryCoodinates } = req.body;
- 
+
     const data = await bus.create(
       plateNumber,
       boundaryCoodinates || DEFAULT_GEOFENCING_BOUNDARY_COORDINATES
@@ -60,9 +60,9 @@ busRouter.get("/:id", async (req: Request, res: Response) => {
       success: true,
       data: { ...data, lastTerminal, nextTerminal },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    return res.status(500).send(error);
+    return res.status(500).send({ success: false, message: error.message });
   }
 });
 
@@ -84,9 +84,9 @@ busRouter.get("/distance/:id", async (req: Request, res: Response) => {
         duration: routeInfo.routes[0].duration,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    return res.status(500).send(error);
+    return res.status(500).send({ success: false, message: error.message });
   }
 });
 
@@ -101,9 +101,9 @@ busRouter.post(
         success: true,
         data: data,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      return res.status(500).send(error);
+      return res.status(500).send({ success: false, message: error.message });
     }
   }
 );
@@ -118,9 +118,9 @@ busRouter.post(
         success: true,
         data: data,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      return res.status(500).send(error);
+      return res.status(500).send({ success: false, message: error.message });
     }
   }
 );

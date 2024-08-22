@@ -10,7 +10,12 @@ class Geoservice {
   nominatimrouter: AxiosInstance;
   constructor() {
     this.georouter = axios.create({ baseURL: openStreetURL });
-    this.nominatimrouter = axios.create({ baseURL: nominatimURL });
+    this.nominatimrouter = axios.create({
+      baseURL: nominatimURL,
+      headers: {
+        "User-Agent": "https://server-summer-thunder-1131.fly.dev/ ",
+      },
+    });
   }
 
   async getRouteBetweenPoints(

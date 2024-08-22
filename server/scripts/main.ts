@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 import { uri } from "../config";
 import { seedBus } from "./seedBus";
 import { seedTrip } from "./seedTrip";
+import { seedTerminals } from "./seedTerminal";
 
-async function run() {
+export async function run() {
   mongoose
     .connect(uri, { maxPoolSize: 10000, serverSelectionTimeoutMS: 5000 })
     .then(() => {
@@ -16,7 +17,6 @@ async function run() {
 
   await seedBus();
   await seedTrip();
+  // await seedTerminals();
   console.log("done");
 }
-
-run();

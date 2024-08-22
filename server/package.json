@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx ts-node app.ts",
-    "start": "npx tsc && node dist/app.js"
+    "start": "npm run seed && npx tsc && node dist/app.js",
+    "seed": "npx ts-node scripts/main.ts"
   },
   "keywords": [],
   "author": "",

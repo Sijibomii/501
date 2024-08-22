@@ -17,8 +17,27 @@ terminalRouter.get("", async (req: Request, res: Response) => {
       data: terminals,
       message: "Successfully updated position",
     });
-  } catch (error) {
-    return res.status(400).json({ success: true, message: error });
+  } catch (error: any) {
+    console.log(error);
+    return res.status(400).json({ success: true, message: error.message });
+  }
+});
+
+terminalRouter.post("", async (req: Request, res: Response) => {
+  try {
+    let { coordinates, displayName } = req.body;
+    if (!displayName) {
+      displayName = (await geoservice.getInfoOfCoordinate(coordinates))
+        .display_name;
+    }
+    const newTerminal = await Terminal.create(coordinates, displayName);
+    return res.status(200).json({
+      success: true,
+      data: newTerminal,
+    });
+  } catch (error: any) {
+    console.log(error);
+    return res.status(400).json({ success: true, message: error.message });
   }
 });
 

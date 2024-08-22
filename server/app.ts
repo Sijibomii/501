@@ -8,7 +8,9 @@ import positionRouter from "./routes/positions";
 import terminalRouter from "./routes/terminals";
 import tripRouter from "./routes/trips";
 import morgan from "morgan";
+import { run } from "./scripts/main";
 
+console.log(uri, PORT);
 mongoose
   .connect(uri, { maxPoolSize: 10000, serverSelectionTimeoutMS: 5000 })
   .then(() => {
@@ -36,5 +38,6 @@ app.get("", async (req: Request, res: Response) => {
 });
 
 app.listen(PORT, async () => {
+  // await run();
   console.log("Started listening on port", PORT);
 });

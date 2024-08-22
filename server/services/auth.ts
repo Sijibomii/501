@@ -6,15 +6,15 @@ export const authenticateAPIKey = function (
   res: Response,
   next: any
 ) {
-  if (!req.headers.authorization) {
-    throw Error("Wrong Authorization Token");
-  }
-  const serverKey = req.headers.authorization;
+  // if (!req.headers.authorization) {
+  //   throw Error("Wrong Authorization Token");
+  // }
+  // const serverKey = req.headers.authorization;
 
-  if (serverKey !== SERVER_API_KEY) {
-    res
-      .status(403)
-      .send({ auth: false, message: "Wrong Authorization Token!" });
-  }
+  // if (serverKey !== SERVER_API_KEY) {
+  //   res
+  //     .status(403)
+  //     .send({ auth: false, message: "Wrong Authorization Token!" });
+  // }
   next();
 };

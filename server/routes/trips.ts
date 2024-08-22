@@ -32,14 +32,15 @@ tripRouter.get("/active", async (req: Request, res: Response) => {
       success: true,
       data: trips,
     });
-  } catch (error) {
-    return res.status(400).json({ success: true, message: error });
+  } catch (error: any) {
+    console.log(error);
+    return res.status(400).json({ success: true, message: error.message });
   }
 });
 
 tripRouter.post("/", async (req: Request, res: Response) => {
   try {
-    // const {terminals, description} = req.body;
+    // const { terminals, description } = req.body;
     const terminals = [
       { latitude: 7.5163, longitude: 4.5227 },
       { latitude: 7.508, longitude: 4.453 },
@@ -57,14 +58,15 @@ tripRouter.post("/", async (req: Request, res: Response) => {
       terminals,
       "Trip from Obafemi Awolowo University, Ile-Ife  to University of Ibadan, Oyo"
     );
-    // const trip=await Trip.createNewTrip(terminals,description);
+    // const trip = await Trip.createNewTrip(terminals, description);
 
     return res.status(200).json({
       success: true,
       data: trip,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    return res.status(400).json({ success: true, message: error.message });
   }
 });
 
