@@ -73,6 +73,12 @@ busRouter.get("/distance/:id", async (req: Request, res: Response) => {
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
     const data = await bus.getById(id);
+    if (!data?.currentPosition || !data) {
+      return res.status(404).json({
+        success: false,
+        message: "Bus Current Position Not Found",
+      });
+    }
     const routeInfo = await geoservice.getRouteBetweenPoints(
       [data!.currentPosition, { latitude, longitude }],
       "driving"

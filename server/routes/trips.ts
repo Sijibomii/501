@@ -15,9 +15,9 @@ tripRouter.get("/active", async (req: Request, res: Response) => {
         let busCurrentLocationInfo;
         let trip;
         if (bus.currentPosition) {
-          busCurrentLocationInfo = await geoservice.getInfoOfCoordinate(
-            bus.currentPosition
-          );
+          busCurrentLocationInfo = (
+            await geoservice.getInfoOfCoordinate(bus.currentPosition)
+          ).display_name;
         }
         if (bus.currentTrip) {
           trip = await Trip.getById(bus.currentTrip!);
@@ -98,7 +98,7 @@ tripRouter.get("/:id", async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      data: { trip, bus },
+      data: { trip, busesOnTrip },
     });
   } catch (error) {
     return res.status(400).json({ success: true, message: error });
