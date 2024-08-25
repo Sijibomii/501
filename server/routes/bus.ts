@@ -66,13 +66,13 @@ busRouter.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-busRouter.get("/distance/:id", async (req: Request, res: Response) => {
+busRouter.get("/distance/:plateNumber", async (req: Request, res: Response) => {
   try {
     //check if bus is still within geofence
-    const id = req.params.id;
+    const plateNumber = req.params.plateNumber;
     const latitude = Number(req.query.latitude);
     const longitude = Number(req.query.longitude);
-    const data = await bus.getById(id);
+    const data = await bus.getByPlateNumber(plateNumber);
     if (!data?.currentPosition || !data) {
       return res.status(404).json({
         success: false,
