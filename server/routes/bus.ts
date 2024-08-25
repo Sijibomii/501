@@ -55,7 +55,6 @@ busRouter.get("/:id", async (req: Request, res: Response) => {
     if (data?.nextTerminal) {
       nextTerminal = await terminal.getById(data.nextTerminal);
     }
-    console.log(data);
     return res.status(200).json({
       success: true,
       data: { ...data, lastTerminal, nextTerminal },

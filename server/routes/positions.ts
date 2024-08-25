@@ -8,8 +8,6 @@ let positionRouter = express.Router();
 positionRouter.post("", async (req: Request, res: Response) => {
   try {
     //check if bus is still within geofence
-    console.log("lat and long data received!");
-    console.log(req.body);
 
     await PositionUpdaterQueue.add(req.body, {
       attempts: 3,
